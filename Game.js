@@ -192,6 +192,7 @@ function resetGame() {
   card2 = null;
   document.getElementById('currentCard').innerHTML = '';
   document.getElementById('currentCardSets').innerHTML = '';
+  usedSetsList.innerHTML = '';
   
 
 

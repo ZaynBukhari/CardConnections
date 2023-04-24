@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Card Connections</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <header>
+        <h1>Card Connections</h1>
+    </header>
+
+    <main>
+        <section class="controls">
+            <div id="timer">Timer: 00:00</div>
+            <button id="startGame" class="button button-primary">Start Game</button>
+        </section>
+
+        <section class="game-container">
+            <section class="card-container" id="card1">
+                <h2>Card 1</h2>
+                <figure>
+                    <div id="currentCard"></div>
+                    <figcaption id="currentCardName"></figcaption>
+                </figure>
+                <h3>Sets</h3>
+                <ul id="currentCardSets"></ul>
+            </section>
+
+            <section class="set-cards-container">
+                <h3>Set Cards</h3>
+                <div id="setCards" class="card-grid card-grid-large"></div>
+            </section>
+
+            <section class="card-container" id="card2">
+                <h2>Card 2</h2>
+                <figure>
+                    <div id="targetCard"></div>
+                    <figcaption id="targetCardName"></figcaption>
+                </figure>
+            </section>
+
+        </section>
+
+        <section class="game-info">
+            <h3>Instructions</h3>
+            <p>Navigate through the sets of the first card to find the second card in the shortest amount of time</p>
+        </section>
+
+        <div id="completionScreen" class="hidden completion-screen">
+            <div class="completion-content">
+              <h2>Congratulations!</h2>
+              <p>You have found the final card!</p>
+              <p>It took you <span id="setCounter"></span> sets to find the second card.</p>
+              <ul id="usedSets"></ul>
+              <button id="newGameButton" class="button button-secondary">Start a New Game</button>
+            </div>
+          </div>
+          
+          
+          
+    </main>
+
+    <div id="availableSetsModal" class="modal">
+        <div class="modal-content">
+            <button id="closeModal">
+                <label for="closeModalCheckbox">&times; Close</label>
+                <input type="checkbox" id="closeModalCheckbox" hidden>
+            </button>
+            <h3>Available Sets</h3>
+            <ul id="availableSets"></ul>
+        </div>
+    </div>
+
+
+    <footer>
+        <p>&copy; Korean if you're reading this, Keep Yourself Safe</p>
+    </footer>
+
+    <script src="Game.js"></script>
+</body>
+</html>

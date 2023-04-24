@@ -102,11 +102,24 @@ function displayCurrentCard(card, isSecondCard = false) {
   const currentCardSets = document.getElementById('currentCardSets');
   const currentCardName = document.getElementById('currentCardName');
   const targetCardName = document.getElementById('targetCardName');
+  const targetCardSets = document.getElementById('targetCardSets');
 
   if (isSecondCard) {
     targetCardContainer.innerHTML = '';
+    targetCardSets.innerHTML = '';
     displayCard(targetCardContainer, card);
     targetCardName.textContent = card.name;
+
+    if (card.card_sets) {
+      card.card_sets.forEach(set => {
+        const listItem = document.createElement('li');
+        listItem.textContent = `${set.set_name} (${set.set_code})`;
+        listItem.addEventListener('click', () => {
+          displaySetCards(set.set_name);
+        });
+        targetCardSets.appendChild(listItem);
+      });
+    }
   } else {
     currentCardContainer.innerHTML = '';
     currentCardSets.innerHTML = '';
@@ -130,10 +143,12 @@ function displayCurrentCard(card, isSecondCard = false) {
       });
     }
 
-
     window.scrollTo(0, 0);
   }
 }
+
+
+
 
 
 function displayCard(cardContainer, card, currentSet, onClick) {
@@ -163,7 +178,6 @@ function displayCard(cardContainer, card, currentSet, onClick) {
 
 
 
-
 function updateTimer() {
   const elapsedTime = new Date() - startTime;
   const elapsedSeconds = Math.floor(elapsedTime / 1000);
@@ -175,8 +189,6 @@ function resetGame() {
   clearInterval(timerInterval);
   card1 = null;
   card2 = null;
-  clickedSets = null;
-  usedSets = null;
   document.getElementById('currentCard').innerHTML = '';
   document.getElementById('currentCardSets').innerHTML = '';
   
@@ -223,8 +235,8 @@ function displaySetCards(setName) {
               displayAvailableSets(cardSets);
               displayCurrentCard(clickedCard);
             }
-            
-          });
+        
+          }, true);
         
           setCardsContainer.appendChild(cardContainer);
         });

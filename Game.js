@@ -44,6 +44,7 @@ function startGame() {
 
     displayCurrentCard(card1);
     displayCurrentCard(card2, true);
+    displayCard2Sets(card2);
 
     console.log(card1, card2);
 
@@ -312,6 +313,19 @@ function displayCurrentCard(card, isSecondCard = false) {
   });
 }
 
+function displayCard2Sets(card) {
+  const targetCardSets = document.getElementById('targetCardSets');
+  targetCardSets.innerHTML = '';
+
+  if (card.card_sets) {
+    card.card_sets.forEach(set => {
+      const setItem = document.createElement('div');
+      setItem.classList.add('set-item');
+      setItem.textContent = `${set.set_name} (${set.set_code})`;
+      targetCardSets.appendChild(setItem);
+    });
+  }
+}
 
 function showCompletionScreen(usedSets, clickedSets) {
   const completionScreen = document.getElementById('completionScreen');

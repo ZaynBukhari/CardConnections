@@ -157,10 +157,30 @@ footer {
 }
 
 .card-grid-large {
-display: grid;
-grid-template-columns: repeat(4, 1fr);
-gap: 10px;
-justify-items: center;
+    display: grid;
+    grid-template-columns: repeat(8, minmax(0, 150px));
+    gap: 10px;
+    justify-items: center;
+    max-width: 1280px;
+    margin: 0 auto;
+}
+
+@media screen and (max-width: 1024px) {
+    .card-grid-large {
+        grid-template-columns: repeat(6, minmax(0, 150px));
+    }
+}
+
+@media screen and (max-width: 768px) {
+    .card-grid-large {
+        grid-template-columns: repeat(4, minmax(0, 150px));
+    }
+}
+
+@media screen and (max-width: 480px) {
+    .card-grid-large {
+        grid-template-columns: repeat(2, minmax(0, 150px));
+    }
 }
 
 .card img {

@@ -11,7 +11,7 @@ const timerDisplay = document.getElementById('timer');
 const availableSetsModal = document.getElementById('availableSetsModal');
 const closeModal = document.getElementById('closeModal');
 const showAvailableSetsButton = document.getElementById('showAvailableSets');
-
+const usedSetsList = document.getElementById('usedSets');
 
 document.addEventListener('DOMContentLoaded', () => {
   startGameButton.addEventListener('click', startGame);
@@ -275,6 +275,7 @@ function displayCurrentCard(card, isSecondCard = false) {
     const currentCardSets = document.getElementById('currentCardSets');
     const currentCardName = document.getElementById('currentCardName');
     const targetCardName = document.getElementById('targetCardName');
+    
 
     if (isSecondCard) {
       targetCardContainer.innerHTML = '';
@@ -330,7 +331,6 @@ function displayCard2Sets(card) {
 
 function showCompletionScreen(usedSets, clickedSets) {
   const completionScreen = document.getElementById('completionScreen');
-  const usedSetsList = document.getElementById('usedSets');
   const setCounter = document.getElementById('setCounter');
   const newGameButton = document.getElementById('newGameButton');
 

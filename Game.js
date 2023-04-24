@@ -175,6 +175,8 @@ function resetGame() {
   clearInterval(timerInterval);
   card1 = null;
   card2 = null;
+  clickedSets = null;
+  usedSets = null;
   document.getElementById('currentCard').innerHTML = '';
   document.getElementById('currentCardSets').innerHTML = '';
   

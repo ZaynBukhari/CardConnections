@@ -38,7 +38,9 @@ closeOverlayButton.addEventListener('click', () => {
   startGame();
 });
 
+
 function startGame() {
+
   resetGame();
 
   generateRandomCards().then(([cardA, cardB]) => {
@@ -59,7 +61,6 @@ function startGame() {
 
     startGameButton.disabled = true;
 
-    showCompletionScreen(usedSets, [], card2.name);
   });
 }
 
@@ -357,13 +358,14 @@ function displayCard2Sets(card) {
   }
 }
 
-function showCompletionScreen(usedSets, clickedSets, targetCardName) {
+function showCompletionScreen(usedSets, clickedSets) {
   const completionScreen = document.getElementById('completionScreen');
   const setCounter = document.getElementById('setCounter');
   const newGameButton = document.getElementById('newGameButton');
-  const targetCardNameSpan = document.getElementById('targetCardName');
+
 
   usedSetsList.innerHTML = '';
+
 
   clickedSets.forEach(set => {
     const listItem = document.createElement('li');
@@ -371,14 +373,12 @@ function showCompletionScreen(usedSets, clickedSets, targetCardName) {
     usedSetsList.appendChild(listItem);
   });
 
+
   setCounter.textContent = clickedSets.length;
-  targetCardNameSpan.textContent = targetCardName;
 
   console.log('Before removing hidden class:', completionScreen.classList);
 
   completionScreen.classList.remove('hidden');
   console.log('After removing hidden class:', completionScreen.classList);
 }
-
-
 

@@ -8,28 +8,36 @@ let startTime;
 
 const startGameButton = document.getElementById('startGame');
 const timerDisplay = document.getElementById('timer');
-const availableSetsModal = document.getElementById('availableSetsModal');
-const closeModal = document.getElementById('closeModal');
-const showAvailableSetsButton = document.getElementById('showAvailableSets');
+const overlay = document.getElementById('overlay');
+const closeOverlayButton = document.getElementById('closeOverlay');
 const usedSetsList = document.getElementById('usedSets');
 
 document.addEventListener('DOMContentLoaded', () => {
   startGameButton.addEventListener('click', startGame);
 });
 
-closeModal.addEventListener('click', () => {
-  availableSetsModal.style.display = 'none';
-});
-
-window.addEventListener('click', (event) => {
-  if (event.target === availableSetsModal) {
-    availableSetsModal.style.display = 'none';
-  }
-});
 
 document.addEventListener('DOMContentLoaded', () => {
   newGameButton.addEventListener('click', startGame);
 });
+
+document.addEventListener('DOMContentLoaded', () => {
+
+  if (!localStorage.getItem('playedBefore')) {
+
+    overlay.style.display = 'flex';
+
+
+    localStorage.setItem('playedBefore', 'true');
+  }
+});
+
+closeOverlayButton.addEventListener('click', () => {
+
+  overlay.style.display = 'none';
+  startGame();
+});
+
 
 function startGame() {
 
@@ -67,10 +75,13 @@ async function generateRandomCards() {
 
     card1Sets = card1.card_sets?.map(set => set.set_name) ?? [];
     card2Sets = card2.card_sets?.map(set => set.set_name) ?? [];
+    card1Sets = [...new Set(card1Sets)];
+    card2Sets = [...new Set(card2Sets)];
   } while (hasIntersection(card1Sets, card2Sets));
 
   return [card1, card2];
 }
+
 async function getRandomCard() {
   let cardData;
   do {
@@ -84,11 +95,26 @@ async function getRandomCard() {
 async function isTcgLegal(cardId) {
   const response = await fetch(`https://db.ygoprodeck.com/api/v7/cardinfo.php?id=${cardId}&format=tcg`);
   const cardData = await response.json();
-  
+
   if (cardData.error) {
     return false;
   }
-  
+
+  const setCodes = new Set();
+if (Array.isArray(cardData.card_sets)) {
+  for (const set of cardData.card_sets) {
+    setCodes.add(set.set_code);
+  }
+}
+  if (setCodes.size === 1) {
+    const setCode = [...setCodes][0];
+    const response = await fetch(`https://db.ygoprodeck.com/api/v7/cardinfo.php?set=${setCode}&type=Monster`);
+    const cardList = await response.json();
+    if (cardList.data.length === 1) {
+      return false;
+    }
+  }
+
   return true;
 }
 
@@ -111,14 +137,18 @@ function displayCurrentCard(card, isSecondCard = false) {
     displayCard(targetCardContainer, card);
     targetCardName.textContent = card.name;
 
+    const setNames = new Set();
     if (card.card_sets) {
       card.card_sets.forEach(set => {
-        const listItem = document.createElement('li');
-        listItem.textContent = `${set.set_name} (${set.set_code})`;
-        listItem.addEventListener('click', () => {
-          displaySetCards(set.set_name);
-        });
-        targetCardSets.appendChild(listItem);
+        if (!setNames.has(set.set_name)) {
+          const listItem = document.createElement('li');
+          listItem.textContent = `${set.set_name} (${set.set_code})`;
+          listItem.addEventListener('click', () => {
+            displaySetCards(set.set_name);
+          });
+          targetCardSets.appendChild(listItem);
+          setNames.add(set.set_name);
+        }
       });
     }
   } else {
@@ -133,14 +163,18 @@ function displayCurrentCard(card, isSecondCard = false) {
     currentCardContainer.appendChild(cardName);
     currentCardName.textContent = card.name;
 
+    const setNames = new Set();
     if (card.card_sets) {
       card.card_sets.forEach(set => {
-        const listItem = document.createElement('li');
-        listItem.textContent = `${set.set_name} (${set.set_code})`;
-        listItem.addEventListener('click', () => {
-          displaySetCards(set.set_name);
-        });
-        currentCardSets.appendChild(listItem);
+        if (!setNames.has(set.set_name)) {
+          const listItem = document.createElement('li');
+          listItem.textContent = `${set.set_name} (${set.set_code})`;
+          listItem.addEventListener('click', () => {
+            displaySetCards(set.set_name);
+          });
+          currentCardSets.appendChild(listItem);
+          setNames.add(set.set_name);
+        }
       });
     }
 
@@ -233,8 +267,6 @@ function displaySetCards(setName) {
               clearInterval(timerInterval);
               showCompletionScreen(usedSets, clickedSets);
             } else {
-              const cardSets = clickedCard.card_sets.map(set => set.set_name);
-              displayAvailableSets(cardSets);
               displayCurrentCard(clickedCard);
             }
         
@@ -252,21 +284,6 @@ function displaySetCards(setName) {
 
 
 
-function displayAvailableSets(sets) {
-  const availableSetsList = document.getElementById('availableSets');
-  availableSetsList.innerHTML = '';
-
-  availableSetsModal.style.display = 'block';
-
-  sets.forEach((setName) => {
-    const listItem = document.createElement('li');
-    listItem.textContent = setName;
-    listItem.addEventListener('click', () => {
-      displaySetCards(setName);
-    });
-    availableSetsList.appendChild(listItem);
-  });
-}
 
 function displayCurrentCard(card, isSecondCard = false) {
   return new Promise((resolve) => {
@@ -296,13 +313,17 @@ function displayCurrentCard(card, isSecondCard = false) {
 
 
       if (card.card_sets) {
+        const seenSetNames = new Set();
         card.card_sets.forEach(set => {
-          const listItem = document.createElement('li');
-          listItem.textContent = `${set.set_name} (${set.set_code})`;
-          listItem.addEventListener('click', () => {
-            displaySetCards(set.set_name);
-          });
-          currentCardSets.appendChild(listItem);
+          if (!seenSetNames.has(set.set_name)) {
+            seenSetNames.add(set.set_name);
+            const listItem = document.createElement('li');
+            listItem.textContent = `${set.set_name} (${set.set_code})`;
+            listItem.addEventListener('click', () => {
+              displaySetCards(set.set_name);
+            });
+            currentCardSets.appendChild(listItem);
+          }
         });
       }
 
@@ -319,12 +340,17 @@ function displayCard2Sets(card) {
   const targetCardSets = document.getElementById('targetCardSets');
   targetCardSets.innerHTML = '';
 
+  const setNames = new Set();
+  
   if (card.card_sets) {
     card.card_sets.forEach(set => {
-      const setItem = document.createElement('div');
-      setItem.classList.add('set-item');
-      setItem.textContent = `${set.set_name} (${set.set_code})`;
-      targetCardSets.appendChild(setItem);
+      if (!setNames.has(set.set_name)) {
+        const setItem = document.createElement('div');
+        setItem.classList.add('set-item');
+        setItem.textContent = `${set.set_name} (${set.set_code})`;
+        targetCardSets.appendChild(setItem);
+        setNames.add(set.set_name);
+      }
     });
   }
 }
@@ -352,3 +378,6 @@ function showCompletionScreen(usedSets, clickedSets) {
   completionScreen.classList.remove('hidden');
   console.log('After removing hidden class:', completionScreen.classList);
 }
+
+
+

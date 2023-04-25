@@ -52,39 +52,38 @@
             <h3>Instructions</h3>
             <p class="game-title"><strong>Card Connections: Find the Link!</strong></p>
             <ul class="instructions-list">
-                <li>Start the game by clicking the "Start Game" button.</li>
-                <li>Two cards will be displayed: Card 1 and Card 2.</li>
-                <li>Your goal is to find a connection between the two cards by navigating through the sets of Card 1.</li>
-                <li>Click on a set listed under Card 1 to display the cards in that set.</li>
-                <li>Choose a card from the displayed set that shares a common set with Card 2.</li>
-                <li>If you've successfully found a connection, the game will congratulate you and show your performance.</li>
-                <li>To play again, click the "Start a New Game" button.</li>
+                <li>Card Connections involves a hunt to find a card in Yu-Gi-Oh. Click on a card to pull up what sets the card is in and click on a set to see what cards are in the set. Keep clicking till you find the Goal Card! </li>
             </ul>
             <p>Challenge yourself to find the connection between the two cards in the shortest amount of time and with the fewest number of sets!</p>
         </section>
         
 
+        <div id="overlay">
+            <div id="overlay-content">
+              <h2>Card Connections: Find the Link!</h2>
+              <p>Instructions:</p>
+              <ul>
+                <li>Click on a card to see what sets it belongs to.</li>
+                <li>Click on a set to see all the cards in that set.</li>
+                <li>Keep searching and clicking until you find the Goal Card.</li>
+                <li>Good luck!</li>
+              </ul>
+              <button id="closeOverlay">Start Game</button>
+            </div>
+          </div>
+
         <div id="completionScreen" class="hidden completion-screen">
             <div class="completion-content">
               <h2>Congratulations!</h2>
-              <p>You have found the final card!</p>
+              <p>You have found the <span id="targetCardName"></span>!</p>
               <p>It took you <span id="setCounter"></span> sets to find the second card.</p>
               <ul id="usedSets"></ul>
               <button id="newGameButton" class="button button-secondary">Start a New Game</button>
             </div>
-        </div>
-    </main>
+          </div>
+          
 
-    <div id="availableSetsModal" class="modal">
-        <div class="modal-content">
-            <button id="closeModal">
-                <label for="closeModalCheckbox">&times; Close</label>
-                <input type="checkbox" id="closeModalCheckbox" hidden>
-            </button>
-            <h3>Available Sets</h3>
-            <ul id="availableSets"></ul>
-        </div>
-    </div>
+
 
     <footer>
         <p>&copy; Korean if you're reading this, Keep Yourself Safe</p>

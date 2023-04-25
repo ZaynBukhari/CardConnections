@@ -228,6 +228,7 @@ function resetGame() {
   document.getElementById('currentCardSets').innerHTML = '';
   document.getElementById('setCounter').innerHTML = '';
   document.getElementById('usedSets').innerHTML = '';
+  usedSets = [];
   usedSetsList.innerHTML = '';
   
 

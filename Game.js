@@ -229,6 +229,7 @@ function resetGame() {
   document.getElementById('setCounter').innerHTML = '';
   document.getElementById('usedSets').innerHTML = '';
   usedSets = [];
+  clickedSets = [];
   usedSetsList.innerHTML = '';
   
 
